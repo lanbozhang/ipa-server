@@ -62,9 +62,16 @@
       })
       return obj
     }
+    function getApiUrl(path) {
+      if (window.localStorage.getItem('ACCESS_KEY')) {
+      return path + '?key=' + window.localStorage.getItem('ACCESS_KEY')
+    }
+      return path
+    }
+
     function loadInfo() {
 
-      IPA.fetch(`/api/info/${query().id}`).then(row => {
+      IPA.fetch(getApiUrl(`/api/info/${query().id}`)).then(row => {
         document.querySelector('#info').innerHTML = `
           <img src="${row.webIcon}" alt="">
           <div class="name">${row.name}</div>

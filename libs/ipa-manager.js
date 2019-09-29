@@ -126,7 +126,7 @@ const add = async (file) => {
     name: info['CFBundleDisplayName'] || info['CFBundleName'] || info['CFBundleExecutable'],
     version: info['CFBundleShortVersionString'],
     identifier: info['CFBundleIdentifier'],
-    build: info['CFBundleVersion'],
+    build: info['JenkinsBuildVersion'] || info['CFBundleVersion'],
     date: new Date(),
     size: (await fs.lstat(file)).size,
     noneIcon: !iconFile,
@@ -150,13 +150,17 @@ const add = async (file) => {
   await fs.remove(tmpDir)
 }
 
-const find = (id, publicURL) => {
+const find = (id, publicURL, canAccess) => {
   const row = itemInfo(appList.find(row => row.id === id), publicURL)
   if (!row) { return {} }
 
-  row.history = appList.filter(r => r.identifier === row.identifier).map(r => Object.assign({}, itemInfo(r, publicURL), {
-    current: r.id === row.id,
-  }))
+  if (canAccess) {
+   row.history = appList.filter(r => r.identifier === row.identifier).map(r => Object.assign({}, itemInfo(r, publicURL), {
+       current: r.id === row.id,
+   }))
+  }else{
+	row.history = []
+  }
 
   return row
 }

@@ -32,7 +32,7 @@ app.use(router.get('/api/list', async ctx => {
 }))
 
 app.use(router.get('/api/info/:id', async (ctx, id) => {
-  ctx.body = ipaManager.find(id, publicURL(ctx))
+  ctx.body = ipaManager.find(id, publicURL(ctx), canAccess(ctx))
 }))
 
 // import ipa
